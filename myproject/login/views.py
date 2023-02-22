@@ -1,29 +1,39 @@
-from rest_framework import generics
-from .serializers import UserRegistrationSerializer, LoginSerializer
-from .models import UserRegistration
-from rest_framework import permissions
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from django.contrib.auth import authenticate, login
 from rest_framework.views import APIView
-from rest_framework import permissions
-from rest_framework import views
-from rest_framework.response import Response
-from . import serializers
+from django.contrib.auth import authenticate, login, logout
+from .serializers import UserRegistrationSerializer, LoginSerializer
+from .models import User
+
 
 class UserRegistrationView(generics.CreateAPIView):
-    queryset = UserRegistration.objects.all()
+    queryset = User.objects.all()
     serializer_class = UserRegistrationSerializer
     permission_classes = [permissions.AllowAny]
 
-class LoginView(views.APIView):
-    # This view should be accessible also for unauthenticated users.
-    permission_classes = (permissions.AllowAny,)
+class LoginView(APIView):
+    serializer_class = LoginSerializer
+    permission_classes = [permissions.AllowAny]
 
-    def post(self, request, format=None):
-        serializer = serializers.LoginSerializer(data=self.request.data,
-            context={ 'request': self.request })
+    def post(self, request):
+        serializer = LoginSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        login(request, user)
-        return Response(None, status=status.HTTP_202_ACCEPTED)
+
+        email = serializer.validated_data['email']
+        password = serializer.validated_data['password']
+
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            login(request, user)
+            return Response({'message': 'Login successful.'})
+        else:
+            return Response({'non_field_errors': ['Unable to log in with provided credentials.']}, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        return Response({'message': 'Logout successful.'})
+
+
