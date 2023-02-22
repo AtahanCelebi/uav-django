@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  django_api:
+    build:
+      context: ./myproject
+      dockerfile: Dockerfile
+    container_name: iha-api-local
+    command: "python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./myproject:/code/
+    ports:
+      - "8000:8000"
+    
+
+  # frontend:
+  #   container_name: crakn-frontend-dev
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile-react
+  #   command: npm run start
+  #   volumes:
+  #     - ./react-frontend:/react-frontend
+  #     - /react-frontend/node_modules
+  #   ports:
+  #     - "3000:3000"
