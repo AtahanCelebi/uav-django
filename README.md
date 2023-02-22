@@ -11,7 +11,7 @@ Method: POST
 
 Permissions: AllowAny
 
-Request Body:
+**Request Body:**
 
 ```json
 {
@@ -21,7 +21,7 @@ Request Body:
     "last_name": "Doe"
 }
 ```
-Response Body:
+**Response Body:**
 
 ```json
 Copy code
@@ -40,7 +40,7 @@ Method: POST
 
 Permissions: AllowAny
 
-Request Body:
+**Request Body:**
 
 ```json
 Copy code
@@ -49,7 +49,7 @@ Copy code
     "password": "password123"
 }
 ```
-Response Body:
+**Response Body:**
 
 ```json
 Copy code
@@ -66,7 +66,7 @@ Method: POST
 
 Permissions: IsAuthenticated
 
-Response Body:
+**Response Body:**
 
 ```json
 Copy code
